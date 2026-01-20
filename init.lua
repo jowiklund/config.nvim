@@ -682,7 +682,29 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {
+          -- Explicitly point to the Mason-installed wrapper, but feed it the local TSDK
+          -- This ensures the wrapper runs, but uses your project's TypeScript brains.
+          init_options = {
+            plugins = {
+              {
+                name = 'typescript-lit-html-plugin',
+                location = vim.fn.getcwd() .. '/node_modules/typescript-lit-html-plugin',
+                languages = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+              },
+            },
+            typescript = {
+              -- CRITICAL: This path must exist. Verify it in your terminal: ls node_modules/typescript/lib
+              tsdk = vim.fn.getcwd() .. '/node_modules/typescript/lib',
+            },
+          },
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'typescript',
+            'typescriptreact',
+          },
+        },
         --
 
         lua_ls = {
@@ -758,6 +780,9 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
+        if vim.bo[bufnr].filetype == 'java' then
+          return nil
+        end
         local disable_filetypes = { c = true, cpp = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
@@ -773,6 +798,7 @@ require('lazy').setup({
         javascript = { 'prettier' },
         svelte = { 'prettier' },
         typescript = { 'prettier' },
+        json = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -947,27 +973,54 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     branch = 'master',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    config = function()
+      -- This is your original 'opts' table, with missing fields added
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = {
+          'bash',
+          'c',
+          'diff',
+          'html',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'query',
+          'vim',
+          'vimdoc',
+          'css',
+          'javascript',
+          'typescript',
+        },
+        auto_install = true,
+        highlight = {
+          enable = true,
+          additional_vim_regex_highlighting = { 'ruby' },
+        },
+        indent = { enable = true, disable = { 'ruby' } },
+
+        -- === FIX 1: Add missing fields with default values ===
+        modules = {},
+        sync_install = false,
+        ignore_install = {},
+      }
+
+      -- === FIX 2: Add type hint to allow adding a new parser ===
+      ---@type table<string, any>
+      local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+
+      -- Define your custom parser (using 'synkzonelog')
+      parser_config.synkzonelog = {
+        install_info = {
+          url = '/home/jw/dev/synkzone-log-parser',
+
+          files = { 'src/parser.c' },
+          generate_requires_npm = true,
+          requires_generate_from_grammar = true,
+        },
+        filetype = 'synkzonelog',
+      }
+    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the

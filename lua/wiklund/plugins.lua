@@ -22,4 +22,19 @@ return {
       }
     end,
   },
+  {
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {
+      settings = {
+        tsserver_plugins = {
+          'typescript-lit-html-plugin',
+        },
+      },
+      filetypes = { 'javascript', 'typescript', 'svelte' },
+    },
+  },
+  {
+    'tpope/vim-sleuth',
+  },
 }
