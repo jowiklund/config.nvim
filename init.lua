@@ -84,6 +84,7 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 
+vim.env.JAVA_HOME = '/usr/lib/jvm/java-1.21.0-openjdk-amd64'
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -682,6 +683,30 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
+        postgres_lsp = {},
+        jdtls = {
+          cmd = {
+            '/usr/lib/jvm/java-1.21.0-openjdk-amd64/bin/java',
+          },
+          settings = {
+            java = {
+              import = {
+                gradle = {
+                  enabled = true,
+                  arguments = ' --settings-file=settings.dev.gradle',
+                },
+              },
+              configuration = {
+                runtimes = {
+                  {
+                    name = 'JavaSE-21',
+                    path = '/usr/lib/jvm/java-1.21.0-openjdk-amd64',
+                  },
+                },
+              },
+            },
+          },
+        },
         ts_ls = {
           -- Explicitly point to the Mason-installed wrapper, but feed it the local TSDK
           -- This ensures the wrapper runs, but uses your project's TypeScript brains.

@@ -1,3 +1,6 @@
+local wiki = vim.fn.expand '~/Synker_/josef.wiklund@synkzone.com/jw/Notes'
+map('n', '<leader>ww', '<cmd>edit ' .. wiki .. '/index.md<CR>:lcd %:p:h<CR>', opts 'Open wiki index')
+
 vim.api.nvim_create_user_command('E', 'Ex', { nargs = 0 })
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
