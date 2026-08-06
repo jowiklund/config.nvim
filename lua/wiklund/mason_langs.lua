@@ -5,4 +5,5 @@ return {
   'prettier',
   'html',
   'gopls',
+  'kotlin-lsp',
 }

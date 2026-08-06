@@ -1,3 +1,9 @@
+local function opts(desc)
+  return { desc = desc, noremap = true, silent = true }
+end
+local function map(mode, lhs, rhs, opts)
+  vim.keymap.set(mode, lhs, rhs, opts)
+end
 local wiki = vim.fn.expand '~/Synker_/josef.wiklund@synkzone.com/jw/Notes'
 map('n', '<leader>ww', '<cmd>edit ' .. wiki .. '/index.md<CR>:lcd %:p:h<CR>', opts 'Open wiki index')
 
