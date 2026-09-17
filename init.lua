@@ -683,17 +683,17 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        kotlin_lsp = {
-          cmd = {
-            vim.fn.stdpath 'data' .. '/mason/bin/intellij-server',
-            '--stdio',
-          },
+        -- kotlin_lsp = {
+        --   cmd = {
+        --     '/opt/kotlin-lsp/bin/intellij-server',
+        --     '--stdio',
+        --   },
+        -- },
+        kotlin_language_server = {
+          root_markers = { 'settings.gradle', 'settings.gradle.kts', 'build.gradle', 'build.gradle.kts', 'pom.xml', '.git' },
         },
         postgres_lsp = {},
         jdtls = {
-          cmd = {
-            '/usr/lib/jvm/java-1.21.0-openjdk-amd64/bin/java',
-          },
           settings = {
             java = {
               import = {
@@ -1112,6 +1112,7 @@ require('lazy').setup({
 })
 
 -- Personal settings
+require 'wiklund.overseer_gradle'
 require 'wiklund.init'
 require 'wiklund.remap'
 

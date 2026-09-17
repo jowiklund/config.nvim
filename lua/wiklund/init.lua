@@ -38,3 +38,13 @@ vim.api.nvim_create_autocmd('BufWritePost', {
     end
   end,
 })
+
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = function()
+    for _, client in ipairs(vim.lsp.get_clients()) do
+      if client.name == 'kotlin_lsp' then
+        client:stop(true) -- true = force
+      end
+    end
+  end,
+})

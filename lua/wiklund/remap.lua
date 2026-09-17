@@ -1,15 +1,26 @@
-local builtin = require("telescope.builtin")
+local builtin = require 'telescope.builtin'
 -- This will load the `lua/wiklund.lua` or `lua/wiklund/init.lua` file
 
 -- PERSONAL
-vim.keymap.set("n", "J", "5j", {})
-vim.keymap.set("n", "K", "5k", {})
-vim.keymap.set("n", "<C-p>", builtin.git_files, {})
-vim.keymap.set("n", "<C-l>", ":Neogit <CR>")
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set("n", "H", vim.lsp.buf.hover, { desc = "Hover documentation" })
-vim.keymap.set("n", "-", "<CMD>Ex<CR>", { desc = "Open parent directory" })
-
+vim.keymap.set('n', 'J', '5j', {})
+vim.keymap.set('n', 'K', '5k', {})
+vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+vim.keymap.set('n', '<C-l>', ':Neogit <CR>')
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', 'H', vim.lsp.buf.hover, { desc = 'Hover documentation' })
+vim.keymap.set('n', '-', '<CMD>Ex<CR>', { desc = 'Open parent directory' })
+vim.keymap.set('n', '<leader>ar', function()
+  vim.cmd 'tabnew | terminal ./run.sh'
+end, { desc = '[A]ndroid [R]un' })
+vim.keymap.set('n', '<leader>al', function()
+  vim.cmd 'enew'
+  vim.fn.jobstart({ 'adb', 'logcat', '-d', '-b', 'crash' }, {
+    stdout_buffered = true,
+    on_stdout = function(_, data)
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, data)
+    end,
+  })
+end, { desc = '[A]ndroid [L]ogcat crash dump' })
 -- DAP
 -- vim.keymap.set("n", "<F5>", function()
 -- 	require("dap").continue()

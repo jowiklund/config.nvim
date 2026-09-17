@@ -25,4 +25,15 @@ return {
   {
     'tpope/vim-sleuth',
   },
+  {
+    'stevearc/overseer.nvim',
+    opts = {
+      task_list = { direction = 'bottom', min_height = 15 },
+    },
+    keys = {
+      { '<leader>ab', '<cmd>OverseerRun<cr>', desc = '[A]ndroid [B]uild menu' },
+      { '<leader>at', '<cmd>OverseerToggle<cr>', desc = '[A]ndroid [T]ask list' },
+      { '<leader>ao', '<cmd>OverseerQuickAction open output<cr>', desc = 'Task output' },
+    },
+  },
 }
